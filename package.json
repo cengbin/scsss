@@ -1,0 +1,14 @@
+{
+  "name": "scsss",
+  "version": "1.0.0",
+  "description": "scss 转 css、wxss、acss 工具",
+  "bin": {
+    "scsss": "./bin/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chokidar": "^3.6.0",
+    "node-sass": "^4.14.1"
+  }
+}
