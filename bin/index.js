@@ -1,49 +1,62 @@
 #!/usr/bin/env node
-
 const chokidar = require('chokidar');
 const sass = require('node-sass');
 const path = require('path');
 const fs = require('fs');
 
-function resolvePath(dir) {
-	return path.resolve(__dirname, './', dir)
+const config = {
+  log: false,
+  ext: "css",
+  include: [],
+  outputStyle: "expanded",
 }
+const configFilePath = path.resolve("./scsss.config.js")
 
-console.log('scsss')
+fs.access(configFilePath, function (err) {
+  if (err && err.code == "ENOENT") {
+    start(config)
+    return
+  }
 
-//监听的文件
-// const watchFile = path.join(__dirname, "./**/*.scss")
+  let userConfig = require(configFilePath)
+  let scsssConfig = Object.assign(config, userConfig)
 
-// const watchFile = [
-// 	resolvePath('./scss/style.scss'),
-// 	resolvePath('./scss/a/a.scss'),
-// ]
+  start(scsssConfig)
+})
 
-/*
-const watchFile = []
 
-chokidar.watch(watchFile).on('all', (event, file) => {
-	const {dir, name} = path.parse(file);
+function start(config) {
+  console.log("[scsss] start ...")
 
-	//忽略以_开头的文件
-	if (name.startsWith('_')) {
-		return;
-	}
+  let {include, ext, log, outputStyle} = config
+  include = (Array.isArray(include) ? include : [include])
 
-	//编译生成的wxss文件目录
-	sass.render({
-		file: file,
-		outputStyle: "expanded"
-	}, function (err, result) {
-		if (!err) {
-			const newFile = `${dir}/${name}.wxss`
-			fs.writeFile(newFile, result.css, function (err) {
-				if (!err) {
-					console.log(`[${new Date().toString().substring(16, 24)}] updated ${newFile}`)
-				}
-			});
-		} else {
-			console.log(err)
-		}
-	});
-});*/
+  // 监听的文件
+  const watchFiles = include.map(item => (path.resolve(item)))
+
+  chokidar.watch(watchFiles).on('all', (event, file) => {
+    const {dir, name} = path.parse(file);
+
+    // 忽略以_开头的文件
+    if (name.startsWith('_')) {
+      return;
+    }
+
+    // 编译生成的指定文件目录
+    sass.render({
+      file: file,
+      outputStyle
+    }, function (err, result) {
+      if (!err) {
+        const newFile = `${dir}/${name}${ext}`
+        fs.writeFile(newFile, result.css, function (err) {
+          if (!err) {
+            log && console.log(`[scsss] ${new Date().toString().substring(16, 24)} ===> updated ${newFile}`)
+          }
+        });
+      } else {
+        console.log(err)
+      }
+    });
+  });
+}
