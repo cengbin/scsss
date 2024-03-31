@@ -1,3 +1,3 @@
 # scsss
 
-scss 转 css、wxss、acss 工具
+scss 转 css、wxss、acss 等指定类型文件的工具
