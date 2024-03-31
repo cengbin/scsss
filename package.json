@@ -5,7 +5,7 @@
   "bin": {
     "scsss": "./index.js"
   },
-  "author": "",
+  "author": "Bin.zeng",
   "license": "ISC",
   "devDependencies": {
     "chokidar": "^3.6.0",
