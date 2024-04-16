@@ -1,13 +1,13 @@
 {
   "name": "scsss",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "scss 转 css、wxss、acss 等指定类型文件的工具",
   "bin": {
     "scsss": "./index.js"
   },
   "author": "Bin.zeng",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "chokidar": "^3.6.0",
     "node-sass": "^4.14.1"
   }
